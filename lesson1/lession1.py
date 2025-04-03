@@ -53,7 +53,7 @@ def read_obj_file_p(file_path):
     return primitive
 
 
-def draw_line_in_range(x0, y0, x1, y1, width, height, d, color):
+def draw_line_in_range(x0, y0, x1, y1, width, height, draw, color):
 
     def convert_coordinate(x, y):
         # 将 [-1, 1] 范围的坐标转换为图像像素坐标
@@ -66,7 +66,7 @@ def draw_line_in_range(x0, y0, x1, y1, width, height, d, color):
     x3, y3 = convert_coordinate(x1, y1)
 
     # 绘制直线
-    d.line((x2, y2, x3, y3), fill=color, width=2)
+    draw.line((x2, y2, x3, y3), fill=color, width=2)
 
 
 
