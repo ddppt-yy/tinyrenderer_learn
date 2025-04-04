@@ -1,5 +1,6 @@
 
 from PIL import Image, ImageDraw
+import math
 
 
 def read_obj_file_v(file_path):
@@ -67,7 +68,7 @@ def draw_line_in_range(x0, y0, x1, y1, width, height, draw, color):
     x3, y3 = convert_coordinate(x1, y1)
 
     # 绘制直线
-    draw.line((x2, y2, x3, y3), fill=color, width=2)
+    draw.line((x2, y2, x3, y3), fill=color, width=1)
 
 
 def draw_tri_line_sweeping(v0, v1, v2, width, height, draw, color):
@@ -115,6 +116,55 @@ def barycentric_coordinates(A, B, C, P):
     return alpha, beta, gamma
 
 
+def barycentric(A, B, C, P):
+    """
+    计算点P在三角形ABC中的重心坐标
+    :param A: 顶点A的三维坐标 (Ax, Ay, Az)
+    :param B: 顶点B的三维坐标 (Bx, By, Bz)
+    :param C: 顶点C的三维坐标 (Cx, Cy, Cz)
+    :param P: 待判断点P的三维坐标 (Px, Py, Pz)
+    :return: 返回重心坐标 (lambda1, lambda2, lambda3)
+    """
+    
+    # 辅助函数：三维向量叉乘
+    def cross(u, v):
+        return (
+            u[1]*v[2] - u[2]*v[1],  # x分量
+            u[2]*v[0] - u[0]*v[2],  # y分量
+            u[0]*v[1] - u[1]*v[0]   # z分量
+        )
+    
+    # 1. 构建矩阵s (只使用x,y分量，隐式投影到2D)
+    s = [
+        [C[0]-A[0], B[0]-A[0], A[0]-P[0]],  # x轴分量 (i=0)
+        [C[1]-A[1], B[1]-A[1], A[1]-P[1]]   # y轴分量 (i=1)
+    ]
+    
+    # 2. 计算叉乘（实际只需要二维行列式）
+    u = cross(
+        (s[0][0], s[0][1], s[0][2]),  # s[0]向量
+        (s[1][0], s[1][1], s[1][2])   # s[1]向量
+    )
+    
+    # 3. 处理退化三角形（面积接近0）
+    if abs(u[2]) > 1e-9:
+        # 计算重心坐标（归一化处理）
+        lambda1 = 1.0 - (u[0] + u[1]) / u[2]
+        lambda2 = u[1] / u[2]
+        lambda3 = u[0] / u[2]
+        return (lambda1, lambda2, lambda3)
+    
+    # 4. 退化情况返回无效坐标
+    return (-1, 1, 1)
+
+
+
+
+
+
+
+
+
 def get_bbox(v0, v1, v2):
     bbox_min_x = min(v0[0], v1[0], v2[0])
     bbox_max_x = max(v0[0], v1[0], v2[0])
@@ -145,7 +195,7 @@ def vector_cross_product(v0, v1):
     # A X B =
     # | i  j  k |
     # | Ax Ay Az|
-    # | Bx By Bz| 
+    # | Bx By Bz|
     # = (AyBz-AzBy)i - (AxBz-AzBx)j + (AxBy-AyBx)k
     # = ||A||*||B||*SINx
 
