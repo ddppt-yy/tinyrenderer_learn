@@ -31,3 +31,6 @@ learn <https://github.com/ssloy/tinyrenderer>
 
 <center><img src="./lesson3/lession3_zbuffer.png"  style="zoom:50%;"/></center>
 <font size="3"> <center>lession3_zbuffer<a id="lession3_zbuffer"></a></center> </font></br></br>
+
+<center><img src="./lesson3/lession3_texture.png"  style="zoom:50%;"/></center>
+<font size="3"> <center>lession3_texture<a id="lession3_texture"></a></center> </font></br></br>

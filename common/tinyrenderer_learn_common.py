@@ -24,7 +24,11 @@ def read_obj_file_v(file_path):
     return vertices
 
 
-def read_obj_file_p(file_path):
+def read_obj_file_p(file_path, type='vertex'):
+    if type == 'vertex':
+        t = 0
+    elif type == 'uv':
+        t = 1
     primitive = []
     try:
         with open(file_path, 'r') as file:
@@ -34,7 +38,7 @@ def read_obj_file_p(file_path):
                     parts = line.split()
                     vertex_indices = []
                     for part in parts[1:]:
-                        vertex_index = int(part.split('/')[0])
+                        vertex_index = int(part.split('/')[t])
                         vertex_indices.append(vertex_index)
                     if len(vertex_indices) == 3:
                         primitive.append(tuple(vertex_indices))
