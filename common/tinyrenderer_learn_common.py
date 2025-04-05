@@ -49,6 +49,44 @@ def read_obj_file_p(file_path, type='vertex'):
     return primitive
 
 
+
+def read_obj_file_uv(file_path):
+    # 定义一个空列表uvs，用于存储读取到的UV坐标
+    uvs = []
+    try:
+        with open(file_path, 'r') as file:
+            for line in file:
+                line = line.strip()
+                if line.startswith('vt '):
+                    parts = line.split()
+                    if len(parts) == 4:
+                        try:
+                            uv = tuple(float(part) for part in parts[1:])
+                            uvs.append(uv)
+                        except ValueError:
+                            print(f"无法将行 '{line}' 中的内容转换为浮点数。")
+    except FileNotFoundError:
+        print(f"错误: 文件 {file_path} 未找到。")
+    except Exception as e:
+        print(f"错误: 发生了一个未知错误: {e}")
+    return uvs
+
+def get_pixel_value_from_uv(image, u, v):
+    width, height = image.size
+    # print(width, height)
+
+    # 将 UV 坐标转换为像素坐标 (0, 0) 表示左上角，(1, 1) 表示右下角
+    # 且uv坐标全为正值
+    x, y = convert_coordinate(u, v, width, height)
+    x = int(u * width)
+    y = int((1-v) * height)
+
+    # 获取像素值
+    pixel = image.getpixel((x, y))
+    return pixel
+
+
+
 def draw_point(x, y, width, height, draw, color):
     def convert_coordinate(x, y):
         # 将 [-1, 1] 范围的坐标转换为图像像素坐标
@@ -207,6 +245,26 @@ def draw_tri_barycentric_zbuf(v0, v1, v2, zbuf, width, height, draw, color):
                     zbuf[(x+width+(y+height)*2*width)] = z
                     draw_point(x/width, y/height, width, height, draw, color)
     return zbuf
+
+
+
+def draw_tri_barycentric_zbuf_texture(v0, v1, v2, v0uv, v1uv, v2uv, zbuf, width, height, cos, draw, tga): 
+    bbox_min_x, bbox_min_y, bbox_max_x, bbox_max_y = get_bbox(v0, v1, v2)
+    for x in range(int(bbox_min_x*width), int(bbox_max_x*width)):
+        for y in range(int(bbox_min_y*width), int(bbox_max_y*width)):
+            p = [x/width, y/height]
+            alpha, beta, gamma = barycentric(v0, v1, v2, p)
+            if alpha >= 0 and beta >= 0 and gamma >= 0:
+                z = alpha*v0[2] + beta*v1[2] + gamma*v2[2]
+                if z > zbuf[(x+width+(y+height)*2*width)]:
+                    zbuf[(x+width+(y+height)*2*width)] = z
+                    uv_x = alpha*v0uv[0] + beta*v1uv[0] + gamma*v2uv[0]
+                    uv_y = alpha*v0uv[1] + beta*v1uv[1] + gamma*v2uv[1]
+                    pixel = get_pixel_value_from_uv(tga, uv_x, uv_y)
+                    color = (int(pixel[0]*cos), int(pixel[1]*cos), int(pixel[2]*cos))
+                    draw_point(x/width, y/height, width, height, draw, color)
+    return zbuf
+
 
 
 

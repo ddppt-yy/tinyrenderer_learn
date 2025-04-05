@@ -143,12 +143,6 @@ for p in primitives:
     if cos < 0:
         continue
 
-    if face == 190:
-        color = "red"
-    elif face == 191:
-        color = "blue"
-    else:
-        color = "white"
     color = (int(255*cos), int(255*cos), int(255*cos))
 
     # draw_line_in_range(v0x, v0y, v1x, v1y, width, height, draw, 'green')
