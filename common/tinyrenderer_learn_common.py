@@ -182,6 +182,30 @@ def draw_tri_barycentric(v0, v1, v2, width, height, draw, color):
                 draw_point(x/width, y/height, width, height, draw, color)
 
 
+def draw_tri_barycentric_zbuf(v0, v1, v2, zbuf, width, height, draw, color):
+    bbox_min_x, bbox_min_y, bbox_max_x, bbox_max_y = get_bbox(v0, v1, v2)
+    for x in range(int(bbox_min_x*width), int(bbox_max_x*width)):
+        for y in range(int(bbox_min_y*width), int(bbox_max_y*width)):
+            p = [x/width, y/height]
+            # alpha, beta, gamma = barycentric_coordinates(v0, v1, v2, p)
+            alpha, beta, gamma = barycentric(v0, v1, v2, p)
+            if alpha >= 0 and beta >= 0 and gamma >= 0:
+                # 使用uv坐标进行差值的原理
+                # if u + v > 1:
+                #     u = 1 - u
+                #     v = 1 - v
+                #     # 计算点 P 的坐标
+                #     x = u * A[0] + v * B[0] + (1 - u - v) * C[0]
+                #     y = u * A[1] + v * B[1] + (1 - u - v) * C[1]
+                #     z = u * A[2] + v * B[2] + (1 - u - v) * C[2]
+                z = alpha*v0[2] + beta*v1[2] + gamma*v2[2]
+                if z > zbuf[(x+width+(y+height)*2*width)]:
+                    zbuf[(x+width+(y+height)*2*width)] = z
+                    draw_point(x/width, y/height, width, height, draw, color)
+    return zbuf
+
+
+
 def swap_vtx_by_y(v0, v1):
     v_tmp = [0, 0]
     if v0[1] > v1[1]:
