@@ -41,8 +41,8 @@ def draw_tri_barycentric_zbuf(v0, v1, v2, zbuf, width, height, draw, color, debu
                 if debug == -1:
                     print("z: ", z)
                     print("z_buf: ", zbuf[int(x+y*width)])
-                if z > zbuf[(x+width+(y+height-1)*width)]:
-                    zbuf[(x+width+(y+height-1)*width)] = z
+                if z > zbuf[(x+width+(y+height)*2*width)]:
+                    zbuf[(x+width+(y+height)*2*width)] = z
                     draw_point(x/width, y/height, width, height, draw, color)
                     # print("draw")
                     num += 1
