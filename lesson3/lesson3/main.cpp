@@ -63,6 +63,7 @@ void triangle(Vec3f *pts, float *zbuffer, TGAImage &image, TGAColor color) {
         for (P.y=bboxmin.y; P.y<=bboxmax.y; P.y++) {
             printf("x=%f,y=%f,z=%f\n",P.x,P.y,P.z);
             Vec3f bc_screen  = barycentric(pts[0], pts[1], pts[2], P);
+            printf("bcx=%f,bcy=%f,bcz=%f\n",bc_screen.x,bc_screen.y,bc_screen.x);
             if (bc_screen.x<0 || bc_screen.y<0 || bc_screen.z<0) continue;
             P.z = 0;
             for (int i=0; i<3; i++) P.z += pts[i][2]*bc_screen[i];
@@ -90,10 +91,12 @@ int main(int argc, char** argv) {
 
     TGAImage image(width, height, TGAImage::RGB);
     for (int i=0; i<model->nfaces(); i++) {
-        std::vector<int> face = model->face(i);
-        Vec3f pts[3];
-        for (int i=0; i<3; i++) pts[i] = world2screen(model->vert(face[i]));
-        triangle(pts, zbuffer, image, TGAColor(rand()%255, rand()%255, rand()%255, 255));
+        if (i == 1172) {
+            std::vector<int> face = model->face(i);
+            Vec3f pts[3];
+            for (int i=0; i<3; i++) pts[i] = world2screen(model->vert(face[i]));
+            triangle(pts, zbuffer, image, TGAColor(rand()%255, rand()%255, rand()%255, 255));
+        }
     }
 
     image.flip_vertically(); // i want to have the origin at the left bottom corner of the image

@@ -54,18 +54,18 @@ def draw_point(x, y, width, height, draw, color):
     x1, y1 = convert_coordinate(x, y)
     draw.point((x1, y1), fill=color)
 
+def convert_coordinate(x, y, width, height):
+    # 将 [-1, 1] 范围的坐标转换为图像像素坐标
+    new_x = int((x + 1) / 2 * width)
+    new_y = int((1 - y) / 2 * height)
+    return new_x, new_y
 
 def draw_line_in_range(x0, y0, x1, y1, width, height, draw, color):
 
-    def convert_coordinate(x, y):
-        # 将 [-1, 1] 范围的坐标转换为图像像素坐标
-        new_x = int((x + 1) / 2 * width)
-        new_y = int((1 - y) / 2 * height)
-        return new_x, new_y
 
     # 转换输入的点坐标
-    x2, y2 = convert_coordinate(x0, y0)
-    x3, y3 = convert_coordinate(x1, y1)
+    x2, y2 = convert_coordinate(x0, y0, width, height)
+    x3, y3 = convert_coordinate(x1, y1, width, height)
 
     # 绘制直线
     draw.line((x2, y2, x3, y3), fill=color, width=1)
