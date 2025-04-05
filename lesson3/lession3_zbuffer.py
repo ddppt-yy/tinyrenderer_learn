@@ -25,7 +25,7 @@ def draw_tri_barycentric_zbuf(v0, v1, v2, zbuf, width, height, draw, color, debu
             p = [x/width, y/height]
             # alpha, beta, gamma = barycentric_coordinates(v0, v1, v2, p)
             alpha, beta, gamma = barycentric(v0, v1, v2, p)
-            if debug == 4:
+            if debug == -1:
                 print("------")
                 print("xybc:", x, y, alpha, beta, gamma)
             if alpha >= 0 and beta >= 0 and gamma >= 0:
@@ -141,9 +141,6 @@ for p in primitives:
 
     cos = vector_cosine(tri_f, light_vct)
     if cos < 0:
-        # draw_line_in_range(v0x, v0y, v1x, v1y, width, height, draw, 'red')
-        # draw_line_in_range(v1x, v1y, v2x, v2y, width, height, draw, 'red')
-        # draw_line_in_range(v2x, v2y, v0x, v0y, width, height, draw, 'red')
         continue
 
     if face == 190:
@@ -158,13 +155,6 @@ for p in primitives:
     # draw_line_in_range(v1x, v1y, v2x, v2y, width, height, draw, 'green')
     # draw_line_in_range(v2x, v2y, v0x, v0y, width, height, draw, 'green')
 
-    if face == 1772:
-        print("p0：" + str(p[0]))
-        print("p1：" + str(p[1]))
-        print("p2：" + str(p[2]))
-        print("v0：" + str(v0))
-        print("v1：" + str(v1))
-        print("v2：" + str(v2))
     zbuf = draw_tri_barycentric_zbuf([v0x, v0y, v0z], [v1x, v1y, v1z], [v2x, v2y, v2z], zbuf, width, height, draw, color, face)
     # print("face:", face)
     face += 1

@@ -52,7 +52,6 @@ def draw_tri_line_sweeping(v0, v1, v2, width, height, draw, color):
         b = [v0[i] + (v1[i] - v0[i]) * beta for i in range(len(v0))]
 
         a, b = swap_vtx_by_y(a, b)
-        print(a, b)
         draw_line_in_range(a[0], a[1], b[0], b[1], width, height, draw, color)
 
     for i in range(int(v1[1]*height), int(v2[1]*height)):
@@ -65,8 +64,7 @@ def draw_tri_line_sweeping(v0, v1, v2, width, height, draw, color):
         b = [v1[i] + (v2[i] - v1[i]) * beta for i in range(len(v0))]
 
         a, b = swap_vtx_by_y(a, b)
-        print(a, b)
-        draw_line_in_range(a[0], a[1], b[0], b[1], width, height, draw, 'color')
+        draw_line_in_range(a[0], a[1], b[0], b[1], width, height, draw, color)
 
 
 # max(x)==100

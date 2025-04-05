@@ -66,7 +66,7 @@ def draw_line_in_range(x0, y0, x1, y1, width, height, draw, color):
     x3, y3 = convert_coordinate(x1, y1)
 
     # 绘制直线
-    draw.line((x2, y2, x3, y3), fill=color, width=2)
+    draw.line((x2, y2, x3, y3), fill=color, width=1)
 
 
 
