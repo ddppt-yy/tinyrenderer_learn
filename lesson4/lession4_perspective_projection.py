@@ -36,7 +36,6 @@ font = ImageFont.load_default()
 tga = Image.open(tga_file)
 tga_width, tga_height = image.size
 
-light_vct = [0, 0, -1]
 zbuf = [-100.0] * 2 * width * 2 * height
 
 print(primitives)
@@ -60,14 +59,6 @@ for p in primitives:
 
 
 
-    tri_f = get_tri_f(v0, v1, v2)
-
-    cos = vector_cosine(tri_f, light_vct)
-    if cos < 0:
-        continue
-
-    color = (int(255*cos), int(255*cos), int(255*cos))
-
     zbuf = draw_tri_barycentric_zbuf(v0, v1, v2, zbuf, width, height, draw, "black")
 
 
@@ -76,4 +67,4 @@ for p in primitives:
 
 
 tga.close()
-image.save("lession3_texture.png")
+image.save("lession4.png")
