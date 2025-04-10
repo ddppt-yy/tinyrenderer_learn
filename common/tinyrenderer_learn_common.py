@@ -40,8 +40,7 @@ def read_obj_file_p(file_path, type='vertex'):
                     for part in parts[1:]:
                         vertex_index = int(part.split('/')[t])
                         vertex_indices.append(vertex_index)
-                    if len(vertex_indices) == 3:
-                        primitive.append(tuple(vertex_indices))
+                    primitive.append(list(vertex_indices))
     except FileNotFoundError:
         print(f"错误: 文件 {file_path} 未找到。")
     except Exception as e:
@@ -308,6 +307,55 @@ def vector_norm(v):
     norm = math.sqrt(sum(i**2 for i in v))
     # 返回向量的范数
     return norm
+
+def matrix_mult(mtx0, mtx1):
+    if isinstance(mtx0, (int, float)) and isinstance(mtx1, (int, float)):
+        ans = mtx0*mtx1
+    elif (isinstance(mtx0, list) and isinstance(mtx0[0], (int, float)) and
+          isinstance(mtx1, list) and isinstance(mtx1[0], (int, float))):
+        # ans = [0] * len(mtx0)
+        ans = [0 for _ in range(len(mtx0))]
+        for i in range(len(mtx0)):
+            ans[i] = mtx0[i] * mtx1[i]
+    elif (isinstance(mtx0, list) and isinstance(mtx0[0], list) and
+          isinstance(mtx1, list) and isinstance(mtx1[0], (int, float)) and
+          len(mtx0[0]) == len(mtx1)):
+        # ans = ([0] * 1) * len(mtx0)
+        ans = [0 for _ in range(len(mtx0))]
+        for i in range(len(mtx0)):
+            for j in range(len(mtx1)):
+                ans[i] = ans[i] + mtx0[i][j] * mtx1[j]
+    elif (isinstance(mtx0, list) and isinstance(mtx0[0], list) and
+          isinstance(mtx1, list) and isinstance(mtx1[0], list) and
+          len(mtx0[0]) == len(mtx1)):
+        # ans = [[0] * len(mtx1[0])] * len(mtx0)
+        ans = [[0 for _ in range(len(mtx0))] for _ in range(len(mtx0))]
+        for i in range(len(mtx0)):
+            for j in range(len(mtx1[0])):
+                ans[i][j] = 0
+                for k in range(len(mtx0[0])):
+                    ans[i][j] = ans[i][j] + mtx0[i][k] * mtx1[k][j]
+    elif (isinstance(mtx0, list) and isinstance(mtx1, (int, float))):
+        if isinstance(mtx0[0], list):
+            # ans = ([0] * len(mtx0[0])) * len(mtx0)
+            ans = [[0 for _ in range(len(mtx0))] for _ in range(len(mtx0))]
+            for i in range(len(mtx0)):
+                for j in range(len(mtx0[0])):
+                    ans[i][j] = mtx0[i][j] * mtx1
+        else:
+            # ans = ([0] * 1) * len(mtx0)
+            ans = [0 for _ in range(len(mtx0))]
+            for i in range(len(mtx0)):
+                ans[i] = mtx0[i] * mtx1
+    return ans
+
+
+
+
+
+
+
+
 
 
 def get_tri_f(v0, v1, v2):

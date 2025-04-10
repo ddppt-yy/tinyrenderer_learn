@@ -16,6 +16,16 @@ sys.path.append('../common')
 from tinyrenderer_learn_common import *
 
 
+
+
+
+
+
+
+
+
+
+
 obj_file = "../obj/lesson4/cube.obj"
 tga_file = "../obj/african_head_diffuse.tga"
 vertices = read_obj_file_v(obj_file)
@@ -38,29 +48,43 @@ tga_width, tga_height = image.size
 
 zbuf = [-100.0] * 2 * width * 2 * height
 
-print(primitives)
-for p in primitives:
-    v0x = vertices[p[0]-1][0]
-    v0y = vertices[p[0]-1][1]
-    v0z = vertices[p[0]-1][2]
+color = "red"
 
-    v1x = vertices[p[1]-1][0]
-    v1y = vertices[p[1]-1][1]
-    v1z = vertices[p[1]-1][2]
-
-    v2x = vertices[p[2]-1][0]
-    v2y = vertices[p[2]-1][1]
-    v2z = vertices[p[2]-1][2]
-
-    v0 = [v0x, v0y, v0z]
-    v1 = [v1x, v1y, v1z]
-    v2 = [v2x, v2y, v2z]
-    print(v0, v1, v2)
+p = primitives[0]
+p_list = p + [p[0]]
 
 
+for v_num in range(len(p)):
+    v_start = [vertices[p_list[v_num]-1][0],
+               vertices[p_list[v_num]-1][1]]
 
-    zbuf = draw_tri_barycentric_zbuf(v0, v1, v2, zbuf, width, height, draw, "black")
+    v_end = [vertices[p_list[v_num+1]-1][0],
+             vertices[p_list[v_num+1]-1][1]]
 
+    draw_line_in_range(v_start[0], v_start[1], v_end[0], v_end[1], width, height, draw, color)
+
+    #scaling along coordinate axes 
+    scaling = [[0.5, 0], [0, 0.5]]
+    v_start_scaling = matrix_mult(scaling, v_start)
+    v_end_scaling = matrix_mult(scaling, v_end)
+
+    draw_line_in_range(v_start_scaling[0], v_start_scaling[1], v_end_scaling[0], v_end_scaling[1], width, height, draw, "blue")
+
+
+    #rotation 
+    scaling = [[0.8, 0], [0, 0.8]]
+    rad = math.radians(45)
+    rotation = [[math.cos(rad), -math.sin(rad)], [math.sin(rad), math.cos(rad)]]
+    # rotation = [[1, 0], [0, 1]]
+
+    op = matrix_mult(scaling, rotation)
+    # op = matrix_mult(rotation, scaling)
+    # print(op)
+
+    v_start_op = matrix_mult(op, v_start)
+    v_end_op = matrix_mult(op, v_end)
+
+    draw_line_in_range(v_start_op[0], v_start_op[1], v_end_op[0], v_end_op[1], width, height, draw, "green")
 
 
 
