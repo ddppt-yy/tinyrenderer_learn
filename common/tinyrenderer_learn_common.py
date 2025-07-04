@@ -309,15 +309,15 @@ def vector_norm(v):
     return norm
 
 def matrix_mult(mtx0, mtx1):
-    if isinstance(mtx0, (int, float)) and isinstance(mtx1, (int, float)):
+    if isinstance(mtx0, (int, float)) and isinstance(mtx1, (int, float)): #num*num
         ans = mtx0*mtx1
-    elif (isinstance(mtx0, list) and isinstance(mtx0[0], (int, float)) and
+    elif (isinstance(mtx0, list) and isinstance(mtx0[0], (int, float)) and #vector*vector
           isinstance(mtx1, list) and isinstance(mtx1[0], (int, float))):
         # ans = [0] * len(mtx0)
         ans = [0 for _ in range(len(mtx0))]
         for i in range(len(mtx0)):
             ans[i] = mtx0[i] * mtx1[i]
-    elif (isinstance(mtx0, list) and isinstance(mtx0[0], list) and
+    elif (isinstance(mtx0, list) and isinstance(mtx0[0], list) and #matrix*vector
           isinstance(mtx1, list) and isinstance(mtx1[0], (int, float)) and
           len(mtx0[0]) == len(mtx1)):
         # ans = ([0] * 1) * len(mtx0)
@@ -325,24 +325,24 @@ def matrix_mult(mtx0, mtx1):
         for i in range(len(mtx0)):
             for j in range(len(mtx1)):
                 ans[i] = ans[i] + mtx0[i][j] * mtx1[j]
-    elif (isinstance(mtx0, list) and isinstance(mtx0[0], list) and
+    elif (isinstance(mtx0, list) and isinstance(mtx0[0], list) and #matrix*matrix
           isinstance(mtx1, list) and isinstance(mtx1[0], list) and
           len(mtx0[0]) == len(mtx1)):
         # ans = [[0] * len(mtx1[0])] * len(mtx0)
-        ans = [[0 for _ in range(len(mtx0))] for _ in range(len(mtx0))]
+        ans = [[0 for _ in range(len(mtx1[0]))] for _ in range(len(mtx0))]
         for i in range(len(mtx0)):
             for j in range(len(mtx1[0])):
                 ans[i][j] = 0
                 for k in range(len(mtx0[0])):
                     ans[i][j] = ans[i][j] + mtx0[i][k] * mtx1[k][j]
     elif (isinstance(mtx0, list) and isinstance(mtx1, (int, float))):
-        if isinstance(mtx0[0], list):
+        if isinstance(mtx0[0], list):                               # matrix*num
             # ans = ([0] * len(mtx0[0])) * len(mtx0)
             ans = [[0 for _ in range(len(mtx0))] for _ in range(len(mtx0))]
             for i in range(len(mtx0)):
                 for j in range(len(mtx0[0])):
                     ans[i][j] = mtx0[i][j] * mtx1
-        else:
+        else:                                                       # vector*num
             # ans = ([0] * 1) * len(mtx0)
             ans = [0 for _ in range(len(mtx0))]
             for i in range(len(mtx0)):
@@ -373,3 +373,8 @@ def get_tri_f(v0, v1, v2):
     # 返回向量v0到v2的单位向量
     return vctf_unit
 
+if __name__ == "__main__":
+    mtx0 = [[1, 2, 3], [1, 2, 3]]
+    mtx1 = [[1, 2], [1, 2], [1, 2]]
+    print(matrix_mult(mtx1, mtx0))
+    print(matrix_mult(mtx0, mtx1))
