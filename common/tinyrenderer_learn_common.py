@@ -308,6 +308,11 @@ def vector_norm(v):
     # 返回向量的范数
     return norm
 
+def vector_div_w(v):
+    v_unit = [x/v[-1] for x in v]
+    return v_unit
+
+
 def matrix_mult(mtx0, mtx1):
     if isinstance(mtx0, (int, float)) and isinstance(mtx1, (int, float)): #num*num
         ans = mtx0*mtx1
